@@ -22,7 +22,8 @@ module TimeVerificationTimeEntry
     # Adds a new validation to time entry model.
     def validate_time_entry_with_new_validation
       validate_time_entry_without_new_validation
-      errors.add :spent_on, "is too early" if (spent_on < Date.today - 5.day)
+      errors.add :spent_on, "is too early" if (spent_on < Date.today - 1.day)
+      errors.add :hours, "is too many" if hours && hours >= 16
     end
   end
 end
