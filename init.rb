@@ -2,8 +2,9 @@ Redmine::Plugin.register :redmine_time_verification do
   name 'Redmine Time Verification plugin'
   author 'kubkowski'
   description 'Simple plugin extending time verification method in TimeEntry model.'
-  version '0.0.1'
+  version '0.0.2'
   url 'https://github.com/kubkowski/redmine_time_verification'
+  settings :default => {'enabled' => true}, :partial => 'settings/time_verification'
 end
 
 require_dependency 'time_entry'
@@ -22,8 +23,10 @@ module TimeVerificationTimeEntry
     # Adds a new validation to time entry model.
     def validate_time_entry_with_new_validation
       validate_time_entry_without_new_validation
-      errors.add :spent_on, "is too early" if (spent_on < Date.today - 1.day)
-      errors.add :hours, "is too many" if hours && hours >= 16
+      if Setting.plugin_redmine_time_verification['enabled']
+        errors.add :spent_on, "is too early" if (spent_on < Date.today - 1.day)
+        errors.add :hours, "is too many" if hours && hours >= 16
+      end
     end
   end
 end
